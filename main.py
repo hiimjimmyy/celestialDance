@@ -29,12 +29,6 @@ def draw_key(win, planets):
 
 
 def draw_year_counter(win, elapsed_time_seconds, planets, font, white):
-    # Sort planets based on their distance to the sun (from the sun to the farthest planet).
-    sorted_planets = sorted(planets, key=lambda p: p.distance_to_sun, reverse=True)
-
-    start_y = HEIGHT - 10 - font.get_height()
-    padding = 20
-
     # Calculate years elapsed for all planets
     years_elapsed = {
         "Earth": elapsed_time_seconds / (365.25 * 24 * 3600),
@@ -43,8 +37,15 @@ def draw_year_counter(win, elapsed_time_seconds, planets, font, white):
         "Mars": elapsed_time_seconds / (687 * 24 * 3600)
     }
 
-    for planet in sorted_planets:
-        if planet.name in years_elapsed:
+    # Define the desired order of planet names
+    planet_order = ["Mars", "Earth", "Venus", "Mercury"]
+
+    start_y = HEIGHT - 10 - font.get_height()
+    padding = 20
+
+    for planet_name in planet_order:
+        planet = next((p for p in planets if p.name == planet_name), None)
+        if planet:
             text = font.render(f"Years on {planet.name}: {years_elapsed[planet.name]:.2f}", 1, white)
             win.blit(text, (10, start_y))
             start_y -= padding
